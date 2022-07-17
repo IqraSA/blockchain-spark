@@ -15,7 +15,7 @@ class ColumnNotFoundInDataFrame(Exception):
     """
 
     def __init__(self, name: str, df: DataFrame) -> None:
-        message = "Column %s not found in DataFrame: %s" % (name, df.schema.simpleString())
+        message = f"Column {name} not found in DataFrame: {df.schema.simpleString()}"
         super().__init__(message)
 
 

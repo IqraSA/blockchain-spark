@@ -10,7 +10,7 @@ def get_resource_path(groups: [str], file_name: str) -> str:
     fixture_file_name = os.path.join(test_root_dir, 'resources', *groups, file_name)
 
     if not os.path.exists(fixture_file_name):
-        raise ValueError('File does not exist: ' + fixture_file_name)
+        raise ValueError(f'File does not exist: {fixture_file_name}')
 
     return fixture_file_name
 
@@ -27,21 +27,20 @@ def run_cmd(cmd):
     unsuccessful, print the failed command and its output.
     """
     try:
-        out = sub.check_output(cmd, shell=True, stderr=sub.STDOUT)
-        return out
+        return sub.check_output(cmd, shell=True, stderr=sub.STDOUT)
     except sub.CalledProcessError as err:
-        logging.error('The failed test setup command was [%s].' % err.cmd)
-        logging.error('The output of the command was [%s]' % err.output)
+        logging.error(f'The failed test setup command was [{err.cmd}].')
+        logging.error(f'The output of the command was [{err.output}]')
         raise
 
 
 # Dynamically load project root dir and jars
-project_root_dir = os.path.dirname(__file__) + '/..'
+project_root_dir = f'{os.path.dirname(__file__)}/..'
 jars = run_cmd(f"ls {project_root_dir}/java/target/blockchain-spark*jar-with-dependencies.jar") \
     .decode('utf-8').split('\n')[0]
 
 # Set environment variables for Spark submit command
-os.environ["PYSPARK_SUBMIT_ARGS"] = "--jars %s pyspark-shell" % jars
+os.environ["PYSPARK_SUBMIT_ARGS"] = f"--jars {jars} pyspark-shell"
 
 os.environ["SPARK_CONF_DIR"] = f"{project_root_dir}/test/resources/conf"
 
