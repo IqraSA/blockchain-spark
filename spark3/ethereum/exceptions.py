@@ -4,7 +4,7 @@ class TypeNotSupported(Exception):
     """
 
     def __init__(self, type_str: str) -> None:
-        message = "Solidity type not supported: %s" % type_str
+        message = f"Solidity type not supported: {type_str}"
         super().__init__(message)
 
 

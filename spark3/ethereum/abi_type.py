@@ -41,7 +41,7 @@ class IntType(ABIType):
             return IntegerType()
         elif 32 < signed_bit_length <= 64:
             return LongType()
-        elif 64 < signed_bit_length:
+        elif signed_bit_length > 64:
             return DecimalType(38, 0)
 
 
@@ -100,10 +100,9 @@ class FixedType(ABIType):
 
 class BytesType(ABIType):
     def __init__(self, length: Optional[int] = None, *args, **kwargs):
-        if length is not None:
-            if length > 32 or length <= 0:
-                raise ABITypeNotValid(
-                    'The length of bytes must les than or equal to 32 and more than 0.')
+        if length is not None and (length > 32 or length <= 0):
+            raise ABITypeNotValid(
+                'The length of bytes must les than or equal to 32 and more than 0.')
 
         super().__init__(
             canonical_type=f'bytes{"" if length is None else length}',

@@ -76,7 +76,7 @@ class Contract:
 
         abi_list = filter_by_name(name, filter_by_type('function', self._abi))
         if len(abi_list) == 0:
-            raise ABIFunctionNotFound('{} not found in ABI'.format(name))
+            raise ABIFunctionNotFound(f'{name} not found in ABI')
         function_abi = abi_list[0]
         schema = get_call_schema_map(function_abi)
 
@@ -92,7 +92,7 @@ class Contract:
 
         abi_list = filter_by_name(name, filter_by_type('event', self._abi))
         if len(abi_list) == 0:
-            raise ABIEventNotFound('{} not found in ABI'.format(name))
+            raise ABIEventNotFound(f'{name} not found in ABI')
         event_abi = abi_list[0]
         schema = get_call_schema_map(event_abi)
 

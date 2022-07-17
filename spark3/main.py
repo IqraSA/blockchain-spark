@@ -88,7 +88,10 @@ class Transformer:
                                 name: str,
                                 ignore_malformed: bool) -> DataFrame:
 
-        df.sql_ctx.udf.registerJavaFunction("decode_func_%s" % name, DECODE_CONTRACT_FUNCTION_UDF, schema)
+        df.sql_ctx.udf.registerJavaFunction(
+            f"decode_func_{name}", DECODE_CONTRACT_FUNCTION_UDF, schema
+        )
+
 
         if not contains_column(df.dtypes, "unhex_input", "binary"):
             df = df.withColumn("unhex_input", unhex(Transformer._provides_unhex_expr("input")))
@@ -96,7 +99,10 @@ class Transformer:
         if not contains_column(df.dtypes, "unhex_output", "binary"):
             df = df.withColumn("unhex_output", unhex(Transformer._provides_unhex_expr("output")))
 
-        function_parameter = expr("decode_func_%s(unhex_input, unhex_output, abi, func_name)" % name)
+        function_parameter = expr(
+            f"decode_func_{name}(unhex_input, unhex_output, abi, func_name)"
+        )
+
         result = df \
             .withColumn("abi", lit(abi)) \
             .withColumn("func_name", lit(name)) \
@@ -113,12 +119,18 @@ class Transformer:
                            name: str,
                            ignore_malformed: bool) -> DataFrame:
 
-        df.sql_ctx.udf.registerJavaFunction("decode_evt_%s" % name, DECODE_CONTRACT_EVENT_UDF, schema)
+        df.sql_ctx.udf.registerJavaFunction(
+            f"decode_evt_{name}", DECODE_CONTRACT_EVENT_UDF, schema
+        )
+
 
         if not contains_column(df.dtypes, "unhex_data", "binary"):
             df = df.withColumn("unhex_data", unhex(Transformer._provides_unhex_expr("data")))
 
-        event_parameter = expr("decode_evt_%s(unhex_data, topics_arr, abi, evt_name)" % name)
+        event_parameter = expr(
+            f"decode_evt_{name}(unhex_data, topics_arr, abi, evt_name)"
+        )
+
 
         result = df \
             .withColumn("abi", lit(abi)) \

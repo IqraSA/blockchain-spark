@@ -47,9 +47,7 @@ class TypeFactory:
 
     @staticmethod
     def abi_type_to_spark_type(abi_type: str) -> DataType:
-        array_reg = re.search(r'\[[\d]*\]$', abi_type)
-
-        if array_reg:
+        if array_reg := re.search(r'\[[\d]*\]$', abi_type):
             return ArrayType(TypeFactory.abi_type_to_spark_type(abi_type[:array_reg.start()]))
         elif abi_type in TypeFactory.abi_types_map:
             return TypeFactory.abi_types_map[abi_type].to_spark_type()
